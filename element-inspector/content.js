@@ -80,45 +80,102 @@
 
 
 
-    // Format the clipboard content as Markdown for AI prompts
+    // Format the clipboard content as compact format for AI prompts
     function formatClipboardContent(element) {
-        const cssSelector = getCssSelector(element);
+        const domPath = getDomPath(element);
+        const rect = element.getBoundingClientRect();
+        const reactComponent = getReactComponentName(element);
+        const attributes = getAttributesCompact(element);
+        const computedStyles = getComputedStylesCompact(element);
         const outerHTML = element.outerHTML;
-        const attributes = getAttributesMarkdown(element);
-        const computedStyles = getComputedStylesMarkdown(element);
-        const positionSize = getPositionAndSizeMarkdown(element);
-        const innerText = element.innerText ? element.innerText.trim() : '';
 
-        let markdown = `## Element\n\n\`\`\`html\n${outerHTML}\n\`\`\`\n\n`;
-        markdown += `## CSS Selector\n\n\`${cssSelector}\`\n\n`;
+        let output = `DOM Path: ${domPath}\n`;
+        output += `Position: top=${Math.round(rect.top)}px, left=${Math.round(rect.left)}px, width=${Math.round(rect.width)}px, height=${Math.round(rect.height)}px\n`;
+
+        if (reactComponent) {
+            output += `React Component: ${reactComponent}\n`;
+        }
 
         if (attributes) {
-            markdown += `## Attributes\n\n${attributes}\n\n`;
+            output += `Attributes: ${attributes}\n`;
         }
 
-        markdown += `## Computed Styles\n\n${computedStyles}\n\n`;
-        markdown += `## Position & Size\n\n${positionSize}\n`;
-
-        if (innerText) {
-            markdown += `\n## Inner Text\n\n${innerText}\n`;
+        if (computedStyles) {
+            output += `Computed Styles: ${computedStyles}\n`;
         }
 
-        return markdown.trim();
+        output += `HTML Element: ${outerHTML}`;
+
+        return output;
     }
 
-    // Get attributes formatted as Markdown
-    function getAttributesMarkdown(element) {
-        const attrs = [];
-        for (const attr of element.attributes) {
-            if (!attr.name.startsWith('__element-inspector')) {
-                attrs.push(`- **${attr.name}:** \`${attr.value}\``);
+    // Get DOM path in compact format (tagName#id.class1.class2)
+    function getDomPath(element) {
+        const path = [];
+        let current = element;
+
+        while (current && current !== document.body && current !== document) {
+            let part = current.tagName.toLowerCase();
+
+            if (current.id) {
+                part += '#' + current.id;
+            }
+
+            if (current.className && typeof current.className === 'string') {
+                const classes = current.className.trim().split(/\s+/).filter(c => c && !c.startsWith('__element-inspector'));
+                if (classes.length > 0) {
+                    part += '.' + classes.join('.');
+                }
+            }
+
+            path.unshift(part);
+            current = current.parentElement;
+        }
+
+        return path.join(' > ');
+    }
+
+    // Try to get React component name from fiber
+    function getReactComponentName(element) {
+        // Try to find React fiber
+        const key = Object.keys(element).find(key =>
+            key.startsWith('__reactFiber$') ||
+            key.startsWith('__reactInternalInstance$')
+        );
+
+        if (key) {
+            let fiber = element[key];
+            // Walk up the fiber tree to find a named component
+            while (fiber) {
+                if (fiber.type && typeof fiber.type === 'function') {
+                    const name = fiber.type.displayName || fiber.type.name;
+                    if (name && name !== 'Anonymous') {
+                        return name;
+                    }
+                }
+                if (fiber.type && typeof fiber.type === 'object' && fiber.type.displayName) {
+                    return fiber.type.displayName;
+                }
+                fiber = fiber.return;
             }
         }
-        return attrs.join('\n');
+
+        return null;
     }
 
-    // Get computed styles formatted as Markdown
-    function getComputedStylesMarkdown(element) {
+    // Get attributes in compact format
+    function getAttributesCompact(element) {
+        const attrs = [];
+        for (const attr of element.attributes) {
+            if (!attr.name.startsWith('__element-inspector') && !attr.name.startsWith('data-cursor')) {
+                attrs.push(`${attr.name}="${attr.value}"`);
+            }
+        }
+        return attrs.join(', ');
+    }
+
+    // Get computed styles in compact format
+    function getComputedStylesCompact(element) {
         const computed = window.getComputedStyle(element);
         const styles = [];
 
@@ -128,7 +185,7 @@
         for (const prop of props) {
             const value = computed[prop];
             if (value && value !== 'rgba(0, 0, 0, 0)') {
-                styles.push(`- **${prop}:** \`${value}\``);
+                styles.push(`${prop}: ${value}`);
             }
         }
 

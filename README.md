@@ -7,13 +7,13 @@ Eine Chrome Extension, die es ermöglicht, HTML-Elemente auf Webseiten zu inspiz
 - **Einfache Aktivierung**: Klicke auf das Extension-Icon, um den Inspektionsmodus zu starten
 - **Element-Auswahl**: Bewege die Maus über beliebige Elemente auf der Webseite
 - **Automatisches Kopieren**: Klicke auf ein Element, um folgende Informationen in die Zwischenablage zu kopieren:
-  - **Element HTML**: Der vollständige HTML-Code des Elements
-  - **CSS Selector**: Der CSS-Selektor-Pfad zum Element
+  - **DOM Path**: Der vollständige DOM-Pfad zum Element (z.B. `div#root > header.fixed > button.px-4`)
+  - **Position**: Größe und Position des Elements (top, left, width, height)
+  - **React Component**: Name der React-Komponente (falls vorhanden)
   - **Attributes**: Alle HTML-Attribute des Elements
   - **Computed Styles**: Wichtige berechnete CSS-Eigenschaften
-  - **Position & Size**: Größe und Position des Elements
-  - **Inner Text**: Der sichtbare Text-Inhalt
-- **Markdown-Format**: Alle Daten werden in sauberem Markdown formatiert, perfekt für AI-Prompts
+  - **HTML Element**: Der vollständige HTML-Code des Elements
+- **Kompaktes Format**: Alle Daten werden in einem kompakten, einzeiligen Format ausgegeben, perfekt für AI-Prompts
 
 ## 📦 Installation
 
@@ -35,10 +35,11 @@ Eine Chrome Extension, die es ermöglicht, HTML-Elemente auf Webseiten zu inspiz
 
 ### Tipps
 
-- Die kopierten Informationen sind in **Markdown formatiert** und können direkt in AI-Prompts eingefügt werden
+- Die kopierten Informationen sind in einem **kompakten Format** und können direkt in AI-Prompts eingefügt werden
 - Der Inspektionsmodus wird automatisch beendet, nachdem ein Element ausgewählt wurde
 - Drücke `ESC`, um den Inspektionsmodus vorzeitig zu beenden
-- Das Format ist optimiert für maximale Lesbarkeit in Chat-Interfaces
+- Das Format ist optimiert für maximale Lesbarkeit und minimalen Platzbedarf in Chat-Interfaces
+- React-Komponenten werden automatisch erkannt und angezeigt (falls vorhanden)
 
 ## 📁 Projektstruktur
 
@@ -71,43 +72,15 @@ element-inspector/
 - Cursor ändert sich zu einem Crosshair im Inspektionsmodus
 
 ### Kopierte Daten
-Die Extension kopiert die Daten in einem **Markdown-Format**, das perfekt für AI-Prompts geeignet ist:
+Die Extension kopiert die Daten in einem **kompakten Format**, das perfekt für AI-Prompts geeignet ist:
 
-```markdown
-## Element
-
-```html
-<button class="btn primary">Click me</button>
 ```
-
-## CSS Selector
-
-`button.btn.primary`
-
-## Attributes
-
-- **class:** `btn primary`
-- **type:** `button`
-
-## Computed Styles
-
-- **color:** `rgb(255, 255, 255)`
-- **backgroundColor:** `rgb(52, 120, 246)`
-- **fontSize:** `16px`
-- **fontFamily:** `Inter, sans-serif`
-- **display:** `inline-block`
-- **position:** `relative`
-
-## Position & Size
-
-- **top:** 150px
-- **left:** 320px
-- **width:** 120px
-- **height:** 40px
-
-## Inner Text
-
-Click me
+DOM Path: div#root > div.min-h-screen.font-mono > header.fixed.top-0.left-0.right-0.z-50 > button.px-4.h-8.flex.items-center
+Position: top=16px, left=1261px, width=73px, height=32px
+React Component: Header
+Attributes: class="px-4 h-8 flex items-center justify-center text-sm font-bold uppercase", style="border: 1px solid var(--border-primary);"
+Computed Styles: color: rgb(255, 255, 255), fontSize: 14px, fontFamily: ui-monospace, display: flex, position: static
+HTML Element: <button class="px-4 h-8 flex items-center justify-center text-sm font-bold uppercase transition-all duration-200 hover:opacity-70 rounded-full" style="border: 1px solid var(--border-primary);">LOGIN</button>
 ```
 
 ## 🔧 Entwicklung

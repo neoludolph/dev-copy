@@ -7,9 +7,13 @@ Eine Chrome Extension, die es ermöglicht, HTML-Elemente auf Webseiten zu inspiz
 - **Einfache Aktivierung**: Klicke auf das Extension-Icon, um den Inspektionsmodus zu starten
 - **Element-Auswahl**: Bewege die Maus über beliebige Elemente auf der Webseite
 - **Automatisches Kopieren**: Klicke auf ein Element, um folgende Informationen in die Zwischenablage zu kopieren:
-  - **Outer HTML**: Der vollständige HTML-Code des Elements
-  - **Computed Styles**: Alle berechneten CSS-Eigenschaften
-  - **JS Path**: Der JavaScript-Selektor-Pfad zum Element
+  - **Element HTML**: Der vollständige HTML-Code des Elements
+  - **CSS Selector**: Der CSS-Selektor-Pfad zum Element
+  - **Attributes**: Alle HTML-Attribute des Elements
+  - **Computed Styles**: Wichtige berechnete CSS-Eigenschaften
+  - **Position & Size**: Größe und Position des Elements
+  - **Inner Text**: Der sichtbare Text-Inhalt
+- **Markdown-Format**: Alle Daten werden in sauberem Markdown formatiert, perfekt für AI-Prompts
 
 ## 📦 Installation
 
@@ -31,9 +35,10 @@ Eine Chrome Extension, die es ermöglicht, HTML-Elemente auf Webseiten zu inspiz
 
 ### Tipps
 
-- Die kopierten Informationen sind formatiert und strukturiert für eine einfache Weiterverarbeitung
+- Die kopierten Informationen sind in **Markdown formatiert** und können direkt in AI-Prompts eingefügt werden
 - Der Inspektionsmodus wird automatisch beendet, nachdem ein Element ausgewählt wurde
 - Drücke `ESC`, um den Inspektionsmodus vorzeitig zu beenden
+- Das Format ist optimiert für maximale Lesbarkeit in Chat-Interfaces
 
 ## 📁 Projektstruktur
 
@@ -66,19 +71,43 @@ element-inspector/
 - Cursor ändert sich zu einem Crosshair im Inspektionsmodus
 
 ### Kopierte Daten
-Die Extension kopiert die Daten in einem strukturierten Format:
+Die Extension kopiert die Daten in einem **Markdown-Format**, das perfekt für AI-Prompts geeignet ist:
 
+```markdown
+## Element
+
+```html
+<button class="btn primary">Click me</button>
 ```
-=== OUTER HTML ===
-<div class="example">...</div>
 
-=== COMPUTED STYLES ===
-color: rgb(0, 0, 0)
-font-size: 16px
-...
+## CSS Selector
 
-=== JS PATH ===
-document.querySelector("div.example")
+`button.btn.primary`
+
+## Attributes
+
+- **class:** `btn primary`
+- **type:** `button`
+
+## Computed Styles
+
+- **color:** `rgb(255, 255, 255)`
+- **backgroundColor:** `rgb(52, 120, 246)`
+- **fontSize:** `16px`
+- **fontFamily:** `Inter, sans-serif`
+- **display:** `inline-block`
+- **position:** `relative`
+
+## Position & Size
+
+- **top:** 150px
+- **left:** 320px
+- **width:** 120px
+- **height:** 40px
+
+## Inner Text
+
+Click me
 ```
 
 ## 🔧 Entwicklung

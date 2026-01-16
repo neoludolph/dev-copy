@@ -78,19 +78,47 @@
         return match ? match[1] : element.tagName.toLowerCase();
     }
 
-    // Get attributes formatted
-    function getAttributesFormatted(element) {
+
+
+    // Format the clipboard content as Markdown for AI prompts
+    function formatClipboardContent(element) {
+        const cssSelector = getCssSelector(element);
+        const outerHTML = element.outerHTML;
+        const attributes = getAttributesMarkdown(element);
+        const computedStyles = getComputedStylesMarkdown(element);
+        const positionSize = getPositionAndSizeMarkdown(element);
+        const innerText = element.innerText ? element.innerText.trim() : '';
+
+        let markdown = `## Element\n\n\`\`\`html\n${outerHTML}\n\`\`\`\n\n`;
+        markdown += `## CSS Selector\n\n\`${cssSelector}\`\n\n`;
+
+        if (attributes) {
+            markdown += `## Attributes\n\n${attributes}\n\n`;
+        }
+
+        markdown += `## Computed Styles\n\n${computedStyles}\n\n`;
+        markdown += `## Position & Size\n\n${positionSize}\n`;
+
+        if (innerText) {
+            markdown += `\n## Inner Text\n\n${innerText}\n`;
+        }
+
+        return markdown.trim();
+    }
+
+    // Get attributes formatted as Markdown
+    function getAttributesMarkdown(element) {
         const attrs = [];
         for (const attr of element.attributes) {
             if (!attr.name.startsWith('__element-inspector')) {
-                attrs.push(`${attr.name}:\n${attr.value}`);
+                attrs.push(`- **${attr.name}:** \`${attr.value}\``);
             }
         }
         return attrs.join('\n');
     }
 
-    // Get computed styles formatted (key styles only)
-    function getComputedStylesFormatted(element) {
+    // Get computed styles formatted as Markdown
+    function getComputedStylesMarkdown(element) {
         const computed = window.getComputedStyle(element);
         const styles = [];
 
@@ -100,43 +128,20 @@
         for (const prop of props) {
             const value = computed[prop];
             if (value && value !== 'rgba(0, 0, 0, 0)') {
-                styles.push(`${prop}:\n${value}`);
+                styles.push(`- **${prop}:** \`${value}\``);
             }
         }
 
         return styles.join('\n');
     }
 
-    // Get position and size
-    function getPositionAndSize(element) {
+    // Get position and size as Markdown
+    function getPositionAndSizeMarkdown(element) {
         const rect = element.getBoundingClientRect();
-        return `top:\n${Math.round(rect.top)}px
-left:\n${Math.round(rect.left)}px
-width:\n${rect.width}px
-height:\n${rect.height}px`;
-    }
-
-    // Format the clipboard content
-    function formatClipboardContent(element) {
-        const cssSelector = getCssSelector(element);
-        const outerHTML = element.outerHTML;
-        const attributes = getAttributesFormatted(element);
-        const computedStyles = getComputedStylesFormatted(element);
-        const positionSize = getPositionAndSize(element);
-        const innerText = element.innerText ? element.innerText.trim() : '';
-
-        return `ELEMENT
-${outerHTML}
-PATH
-${cssSelector}
-ATTRIBUTES
-${attributes}
-COMPUTED STYLES
-${computedStyles}
-POSITION & SIZE
-${positionSize}
-INNER TEXT
-${innerText}`;
+        return `- **top:** ${Math.round(rect.top)}px
+- **left:** ${Math.round(rect.left)}px
+- **width:** ${rect.width}px
+- **height:** ${rect.height}px`;
     }
 
     // Copy to clipboard

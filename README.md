@@ -6,14 +6,12 @@ A Chrome Extension that allows you to inspect HTML elements on web pages and aut
 
 - **Easy Activation**: Click the extension icon to start inspection mode
 - **Element Selection**: Hover over any element on the webpage
-- **Automatic Copying**: Click on an element to copy the following information to your clipboard:
-  - **DOM Path**: The complete DOM path to the element (e.g., `div#root > header.fixed > button.px-4`)
-  - **Position**: Size and position of the element (top, left, width, height)
-  - **React Component**: Name of the React component (if available)
-  - **Attributes**: All HTML attributes of the element
-  - **Computed Styles**: Important computed CSS properties
-  - **HTML Element**: The complete HTML code of the element
-- **Compact Format**: All data is output in a compact, single-line format, perfect for AI prompts
+- **Automatic AI-Ready Copying**: Click on an element to copy a compact summary to your clipboard, formatted for AI prompts:
+  - **Compact DOM Path**: Abbreviated path with shortened class names for brevity
+  - **Position**: Size and position of the element
+  - **React Component**: Automatic detection of React component names
+  - **Smart HTML**: A compact representation of the element's HTML including attributes and text preview
+- **Optimization**: All data is wrapped in backticks and formatted to minimize token usage in chat interfaces
 
 ## 📦 Installation
 
@@ -72,15 +70,13 @@ element-inspector/
 - Cursor changes to a crosshair in inspection mode
 
 ### Copied Data
-The extension copies data in a **compact format** that's perfect for AI prompts:
+The extension copies data in a compact, backtick-wrapped format designed for AI prompts:
 
 ```
-\DOM Path: div#root > div.min-h-screen.font-mono > header.fixed.top-0.left-0.right-0.z-50 > button.px-4.h-8.flex.items-center
+`DOM Path: div#root > div.min-h.font-mono > header.fixed.top-0.left-0.right-0.z-50 > button.px-4.h-8.flex.items.
 Position: top=16px, left=1261px, width=73px, height=32px
 React Component: Header
-Attributes: class="px-4 h-8 flex items-center justify-center text-sm font-bold uppercase", style="border: 1px solid var(--border-primary);"
-Computed Styles: color: rgb(255, 255, 255), fontSize: 14px, fontFamily: ui-monospace, display: flex, position: static
-HTML Element: <button class="px-4 h-8 flex items-center justify-center text-sm font-bold uppercase transition-all duration-200 hover:opacity-70 rounded-full" style="border: 1px solid var(--border-primary);">LOGIN</button>\
+HTML Element: <button class="px-4 h-8 flex items-center justify-center text-sm font-bold uppercase transition-all duration-200 hover:opacity-70 rounded-full" style="border: 1px solid var(--border-primary);">LOGIN</button>`
 ```
 
 ## 🔧 Development

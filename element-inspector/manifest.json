@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Element Inspector",
   "version": "1.0.0",
-  "description": "Click any element to copy its Outer HTML, Computed Styles, and JS Path to clipboard",
+  "description": "Click any element to copy a compact, AI-ready summary of its DOM path, position, and HTML to clipboard",
   "permissions": [
     "activeTab",
     "scripting"
